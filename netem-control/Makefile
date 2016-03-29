@@ -52,7 +52,17 @@ define Package/netem-control/postinst
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	. $${IPKG_INSTROOT}/etc/uci-defaults/netem
 	rm -f $${IPKG_INSTROOT}/etc/uci-defaults/netem
+	/etc/init.d/netem-control enable
 fi
+endef
+
+define Package/mrelay/prerm
+#!/bin/sh
+# check if we are on real system
+if [ -z "$${IPKG_INSTROOT}" ]; then
+    /etc/init.d/netem-control disable
+fi
+exit 0
 endef
 
 $(eval $(call BuildPackage,netem-control))
